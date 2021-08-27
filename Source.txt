@@ -1,0 +1,511 @@
+--[[
+░░░████████░░░████████░░░██░░░░░░░░░░██░░░██░░░░░░░░░░██░░░
+░░░░░░██░░░░░░██░░░░░░░░░████░░░░░░████░░░████░░░░░░████░░░
+░░░░░░██░░░░░░██░░░░░░░░░██░░██░░██░░██░░░██░░██░░██░░██░░░
+░░░░░░██░░░░░░████████░░░██░░██░░██░░██░░░██░░██░░██░░██░░░
+░░░░░░██░░░░░░██░░░░░░░░░██░░░░██░░░░██░░░██░░░░██░░░░██░░░
+░░░░░░██░░░░░░██░░░░░░░░░██░░░░░░░░░░██░░░██░░░░░░░░░░██░░░
+░░░████████░░░████████░░░██░░░░░░░░░░██░░░██░░░░░░░░░░██░░░
+--]]
+
+local UserInputService = game:GetService("UserInputService")
+
+local main = {
+	LocalPlayer = game:GetService("Players").LocalPlayer,
+	ScreenGui = Instance.new("ScreenGui"),
+	MainFrame = Instance.new("Frame"),
+	DragBar = Instance.new("Frame"),
+	DragBarLabel = Instance.new("TextLabel"),
+	DragBarArrow = Instance.new("TextButton"),
+	DragBarArrowDebounce = false,
+	DragBarArrowActive = false,
+	Page = Instance.new("Frame"),
+	Scroll = Instance.new("ScrollingFrame"),
+	Template = Instance.new("Frame"),
+	TemplateProperties = {
+		Image = Instance.new("ImageLabel"),
+		Id = Instance.new("TextLabel"),
+		UnderSpace = Instance.new("Frame")
+	}
+}
+
+local imagesExplorer = {
+	
+	["Initialize"] = function(module)
+		module:Check()
+		module:LoadGui()
+	end,
+	
+	["Check"] = function(module)
+		if main.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("IMAGES_EXPLORER_GUI") then
+			module:SendNotification("You Have IE")
+			return
+		end
+	end,
+	
+	["LoadGui"] = function(module)
+		module:CreateGui()
+		module:SetDrag()
+		module:GetAssets()
+		module:SetFuncions()
+	end,
+	
+	["SendNotification"] = function(module, text)
+		game.StarterGui:SetCore("SendNotification",{
+			Title = "IE GUI";
+			Text = text;
+			Duration = 5}
+		);
+	end,
+	
+	["CreateGui"] = function(module)
+		wait(1)
+		main.ScreenGui.Parent = main.LocalPlayer:WaitForChild("PlayerGui")
+		main.ScreenGui.Enabled = true
+		main.ScreenGui.DisplayOrder = 0
+		main.ScreenGui.IgnoreGuiInset = false
+		main.ScreenGui.Name = "IMAGES_EXPLORER_GUI"
+		main.ScreenGui.ResetOnSpawn = false
+		main.ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		main.ScreenGui.AutoLocalize = true
+		main.ScreenGui.RootLocalizationTable = nil
+
+		main.MainFrame.Parent = main.ScreenGui
+		main.MainFrame.SelectionImageObject = nil
+		main.MainFrame.Active = false
+		main.MainFrame.AnchorPoint = Vector2.new(0, 0)
+		main.MainFrame.AutomaticSize = Enum.AutomaticSize.None
+		main.MainFrame.BackgroundTransparency = 1
+		main.MainFrame.LayoutOrder = 0
+		main.MainFrame.Name = "Main"
+		main.MainFrame.Position = UDim2.new(0.035, 0, 0.15 ,0)
+		main.MainFrame.Rotation = 0
+		main.MainFrame.Selectable = false
+		main.MainFrame.Size = UDim2.new(0.2, 0, 0.5, 0)
+		main.MainFrame.SizeConstraint = Enum.SizeConstraint.RelativeXY
+		main.MainFrame.Style = Enum.FrameStyle.Custom
+		main.MainFrame.Visible = true
+		main.MainFrame.ZIndex = 1
+		main.MainFrame.RootLocalizationTable = nil
+
+		main.DragBar.Parent = main.MainFrame
+		main.DragBar.SelectionImageObject = nil
+		main.DragBar.Active = false
+		main.DragBar.AnchorPoint = Vector2.new(0, 0)
+		main.DragBar.AutomaticSize = Enum.AutomaticSize.None
+		main.DragBar.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+		main.DragBar.BackgroundTransparency = 0
+		main.DragBar.BorderSizePixel = 0
+		main.DragBar.LayoutOrder = 0
+		main.DragBar.Name = "DragBar"
+		main.DragBar.Position = UDim2.new(0, 0, 0.0, 0)
+		main.DragBar.Rotation = 0
+		main.DragBar.Selectable = false
+		main.DragBar.Size = UDim2.new(1, 0, 0.11, 0)
+		main.DragBar.SizeConstraint = Enum.SizeConstraint.RelativeXY
+		main.DragBar.Style = Enum.FrameStyle.Custom
+		main.DragBar.Visible = true
+		main.DragBar.ZIndex = 2
+		main.DragBar.RootLocalizationTable = nil
+
+		main.DragBarLabel.Parent = main.DragBar
+		main.DragBarLabel.SelectionImageObject = nil
+		main.DragBarLabel.Active = false
+		main.DragBarLabel.AnchorPoint = Vector2.new(0, 0)
+		main.DragBarLabel.AutomaticSize = Enum.AutomaticSize.None
+		main.DragBarLabel.BackgroundTransparency = 1
+		main.DragBarLabel.LayoutOrder = 0
+		main.DragBarLabel.Name = "Label"
+		main.DragBarLabel.Position = UDim2.new(-0.075, 0, 0, 0)
+		main.DragBarLabel.Rotation = 0
+		main.DragBarLabel.Selectable = false
+		main.DragBarLabel.Size = UDim2.new(1, 0, 1, 0)
+		main.DragBarLabel.SizeConstraint = Enum.SizeConstraint.RelativeXY
+		main.DragBarLabel.Visible = true
+		main.DragBarLabel.ZIndex = 1
+		main.DragBarLabel.RootLocalizationTable = nil
+		main.DragBarLabel.Font = Enum.Font.SourceSansBold
+		main.DragBarLabel.Text = "Images Explorer"
+		main.DragBarLabel.TextColor3 = Color3.new(1, 1, 1)
+		main.DragBarLabel.TextScaled = true
+
+		main.DragBarArrow.Parent = main.DragBar
+		main.DragBarArrow.SelectionImageObject = nil
+		main.DragBarArrow.Active = true
+		main.DragBarArrow.AnchorPoint = Vector2.new(0, 0)
+		main.DragBarArrow.AutomaticSize = Enum.AutomaticSize.None
+		main.DragBarArrow.BackgroundTransparency = 1
+		main.DragBarArrow.LayoutOrder = 0
+		main.DragBarArrow.Name = "Arrow"
+		main.DragBarArrow.Position = UDim2.new(0.85, 0, 0, 0)
+		main.DragBarArrow.Rotation = 0
+		main.DragBarArrow.Selectable = false
+		main.DragBarArrow.Size = UDim2.new(0.15, 0, 1, 0)
+		main.DragBarArrow.SizeConstraint = Enum.SizeConstraint.RelativeXY
+		main.DragBarArrow.Visible = true
+		main.DragBarArrow.ZIndex = 1
+		main.DragBarArrow.RootLocalizationTable = nil
+		main.DragBarArrow.Font = Enum.Font.SourceSansSemibold
+		main.DragBarArrow.Text = ">"
+		main.DragBarArrow.TextColor3 = Color3.new(1, 1, 1)
+		main.DragBarArrow.TextScaled = true
+
+		main.Page.Parent = main.MainFrame
+		main.Page.SelectionImageObject = nil
+		main.Page.Active = false
+		main.Page.AnchorPoint = Vector2.new(0, 0)
+		main.Page.AutomaticSize = Enum.AutomaticSize.None
+		main.Page.BackgroundColor3 = Color3.new(0.117647, 0.117647, 0.117647)
+		main.Page.BackgroundTransparency = 0
+		main.Page.BorderSizePixel = 0
+		main.Page.LayoutOrder = 0
+		main.Page.Name = "Main"
+		main.Page.Position = UDim2.new(0, 0, 0 ,0)
+		main.Page.Rotation = 0
+		main.Page.Selectable = false
+		main.Page.Size = UDim2.new(1, 0, 0.11, 0)
+		main.Page.SizeConstraint = Enum.SizeConstraint.RelativeXY
+		main.Page.Style = Enum.FrameStyle.Custom
+		main.Page.Visible = false
+		main.Page.ZIndex = 1
+		main.Page.RootLocalizationTable = nil
+
+		main.Scroll.Parent = main.Page
+		main.Scroll.SelectionImageObject = nil
+		main.Scroll.Active = true
+		main.Scroll.AnchorPoint = Vector2.new(0, 0)
+		main.Scroll.AutomaticSize = Enum.AutomaticSize.None
+		main.Scroll.BackgroundTransparency = 1
+		main.Scroll.LayoutOrder = 0
+		main.Scroll.Name = "Scroll"
+		main.Scroll.Position = UDim2.new(0, 0, 0.11, 0)
+		main.Scroll.Rotation = 0
+		main.Scroll.Selectable = false
+		main.Scroll.Size = UDim2.new(1, 0, 0.89, 0)
+		main.Scroll.SizeConstraint = Enum.SizeConstraint.RelativeXY
+		main.Scroll.Visible = true
+		main.Scroll.ZIndex = 2
+		main.Scroll.RootLocalizationTable = nil
+		main.Scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+		main.Scroll.ScrollBarImageColor3 = Color3.new(0.635294, 0.635294, 0.635294)
+		main.Scroll.VerticalScrollBarPosition = Enum.VerticalScrollBarPosition.Left
+
+		Instance.new("UIListLayout", main.Scroll)
+
+		main.Template.Parent = main.Scroll
+		main.Template.SelectionImageObject = nil
+		main.Template.Active = false
+		main.Template.AnchorPoint = Vector2.new(0, 0)
+		main.Template.AutomaticSize = Enum.AutomaticSize.None
+		main.Template.BackgroundColor3 = Color3.new(0.196078, 0.196078, 0.294118)
+		main.Template.BackgroundTransparency = 0
+		main.Template.BorderSizePixel = 0
+		main.Template.LayoutOrder = 0
+		main.Template.Name = "Template"
+		main.Template.Rotation = 0
+		main.Template.Selectable = false
+		main.Template.Size = UDim2.new(1, 0, 0.2, 0)
+		main.Template.SizeConstraint = Enum.SizeConstraint.RelativeXY
+		main.Template.Style = Enum.FrameStyle.Custom
+		main.Template.Visible = false
+		main.Template.ZIndex = 1
+		main.Template.RootLocalizationTable = nil
+
+		do
+			local UARC = Instance.new("UIAspectRatioConstraint", main.Template)
+			UARC.AspectRatio = 4
+
+			main.TemplateProperties.Image.Parent = main.Template
+			main.TemplateProperties.Image.SelectionImageObject = nil
+			main.TemplateProperties.Image.Active = false
+			main.TemplateProperties.Image.AnchorPoint = Vector2.new(0, 0)
+			main.TemplateProperties.Image.AutomaticSize = Enum.AutomaticSize.None
+			main.TemplateProperties.Image.BackgroundColor3 = Color3.new(1, 1, 1)
+			main.TemplateProperties.Image.BackgroundTransparency = 0
+			main.TemplateProperties.Image.BorderSizePixel = 0
+			main.TemplateProperties.Image.LayoutOrder = 0
+			main.TemplateProperties.Image.Name = "Image"
+			main.TemplateProperties.Image.Position = UDim2.new(0.76, 0, 0.069, 0)
+			main.TemplateProperties.Image.Rotation = 0
+			main.TemplateProperties.Image.Selectable = false
+			main.TemplateProperties.Image.Size = UDim2.new(0.206, 0, 0.862, 0)
+			main.TemplateProperties.Image.SizeConstraint = Enum.SizeConstraint.RelativeXY
+			main.TemplateProperties.Image.Visible = true
+			main.TemplateProperties.Image.ZIndex = 1
+			main.TemplateProperties.Image.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+
+			local _ = Instance.new("StringValue", main.TemplateProperties.Image)
+			_.Name = "_ImageForExplorer"
+
+			main.TemplateProperties.Id.Parent = main.Template
+			main.TemplateProperties.Id.SelectionImageObject = nil
+			main.TemplateProperties.Id.Active = false
+			main.TemplateProperties.Id.AnchorPoint = Vector2.new(0, 0)
+			main.TemplateProperties.Id.AutomaticSize = Enum.AutomaticSize.None
+			main.TemplateProperties.Id.BackgroundTransparency = 1
+			main.TemplateProperties.Id.LayoutOrder = 0
+			main.TemplateProperties.Id.Name = "Id"
+			main.TemplateProperties.Id.Position = UDim2.new(0.066, 0, 0.069, 0)
+			main.TemplateProperties.Id.Rotation = 0
+			main.TemplateProperties.Id.Selectable = false
+			main.TemplateProperties.Id.Size = UDim2.new(0.66, 0, 0.862, 0)
+			main.TemplateProperties.Id.SizeConstraint = Enum.SizeConstraint.RelativeXY
+			main.TemplateProperties.Id.Visible = true
+			main.TemplateProperties.Id.ZIndex = 1
+			main.TemplateProperties.Id.Font = Enum.Font.GothamBold
+			main.TemplateProperties.Id.RichText = true
+			main.TemplateProperties.Id.Text = "Id: ?"
+			main.TemplateProperties.Id.TextColor3 = Color3.new(1, 1, 1)
+			main.TemplateProperties.Id.TextScaled = true
+			main.TemplateProperties.Id.TextXAlignment = Enum.TextXAlignment.Left
+			main.TemplateProperties.Id.TextYAlignment = Enum.TextYAlignment.Top
+
+			main.TemplateProperties.UnderSpace.Parent = main.Template
+			main.TemplateProperties.UnderSpace.SelectionImageObject = nil
+			main.TemplateProperties.UnderSpace.Active = false
+			main.TemplateProperties.UnderSpace.AnchorPoint = Vector2.new(0, 0)
+			main.TemplateProperties.UnderSpace.AutomaticSize = Enum.AutomaticSize.None
+			main.TemplateProperties.UnderSpace.BackgroundColor3 = Color3.new(0.27451, 0.27451, 0.372549)
+			main.TemplateProperties.UnderSpace.BackgroundTransparency = 0
+			main.TemplateProperties.UnderSpace.BorderSizePixel = 0
+			main.TemplateProperties.UnderSpace.LayoutOrder = 0
+			main.TemplateProperties.UnderSpace.Name = "UnderSpace"
+			main.TemplateProperties.UnderSpace.Position = UDim2.new(0, 0, 0.7, 0)
+			main.TemplateProperties.UnderSpace.Rotation = 0
+			main.TemplateProperties.UnderSpace.Selectable = false
+			main.TemplateProperties.UnderSpace.Size = UDim2.new(1, 0, 0.3, 0)
+			main.TemplateProperties.UnderSpace.SizeConstraint = Enum.SizeConstraint.RelativeXY
+			main.TemplateProperties.UnderSpace.Style = Enum.FrameStyle.Custom
+			main.TemplateProperties.UnderSpace.Visible = true
+			main.TemplateProperties.UnderSpace.ZIndex = -1
+			main.TemplateProperties.UnderSpace.RootLocalizationTable = nil
+		end
+		
+		module:SendNotification("GUI Successfully Loaded! Enjoy!")
+		
+	end,
+	
+	["UpdateScroll"] = function(module)
+		for _, v in pairs(main.Scroll:GetChildren()) do
+			if v.Name == "Tab" then
+				main.Scroll.CanvasSize = UDim2.new(0, 0, 0, 300 * _ / 3)
+			end
+		end
+	end,
+	
+	["CreateTab"] = function(module, child)
+		for _, v in pairs(main.Scroll:GetChildren()) do
+			if v:IsA("Frame") and v.Name == "Tab" then
+				if child:IsA("SpecialMesh") then
+					if v:FindFirstChild("Image").Image == child.TextureId then
+						return
+					end
+				elseif child:IsA("ImageLabel") or child:IsA("ImageButton") then
+					if v:FindFirstChild("Image").Image == child.Image then
+						return
+					end
+				else
+					if v:FindFirstChild("Image").Image == child.Texture then
+						return
+					end
+				end
+			end
+		end
+		local tab = main.Template:Clone()
+		tab.Name = "Tab"
+		tab.Parent = main.Scroll
+		tab.Visible = true
+		if child then
+			if child:IsA("SpecialMesh") then
+				tab:FindFirstChild("Image").Image = child.TextureId
+				tab:FindFirstChild("Id").Text = "Id: ".. tostring(child.TextureId).. " - Mesh"
+			elseif child:IsA("ImageLabel") or child:IsA("ImageButton") then
+				tab:FindFirstChild("Image").Image = child.Image
+				tab:FindFirstChild("Id").Text = "Id: ".. tostring(child.Image).. " - (G)UI Image"
+			else
+				tab:FindFirstChild("Image").Image = child.Texture
+				tab:FindFirstChild("Id").Text = "Id: ".. tostring(child.Texture).. " - "..child.ClassName
+			end
+		end
+	end,
+	
+	["RemoveTab"] = function(module, child)
+		for _, tab in pairs(main.Scroll:GetChildren()) do
+			if tab:IsA("Frame") and tab:FindFirstChild("Image") then
+				if child:IsA("SpecialMesh") then
+					if tab:FindFirstChild("Image").Image == child.TextureId then
+						tab:Destroy()
+					end
+				else
+					if tab:FindFirstChild("Image").Image == child.Texture then
+						tab:Destroy()
+					end
+				end
+			end
+		end
+	end,
+	
+	["SetDrag"] = function(module)
+		local dragging = nil
+		local dragInput = nil
+		local dragStart = nil
+		local startPos = nil
+
+		local function update(input)
+			local delta = input.Position - dragStart
+			main.MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		end
+
+		main.DragBar.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				dragging = true
+				dragStart = input.Position
+				startPos = main.MainFrame.Position
+
+				input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						dragging = false
+					end
+				end)
+			end
+			main.DragBar.InputChanged:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+					dragInput = input
+				end
+			end)
+
+			UserInputService.InputChanged:Connect(function(input)
+				if input == dragInput and dragging then
+					update(input)
+				end
+			end)
+		end)
+	end,
+	
+	["GetAssets"] = function(module)
+		for _, v in pairs(game.Workspace:GetDescendants()) do
+			if v:IsA("Decal") or v:IsA("Texture") or v:IsA("Beam") or v:IsA("ImageLabel") then
+				module:CreateTab(v)
+			end
+			module:UpdateScroll()
+		end
+
+		for _, v in pairs(main.LocalPlayer.PlayerGui:GetDescendants()) do
+			if v:IsA("ImageLabel") or v:IsA("ImageButton") then
+				if not v:FindFirstChild("_ImageForExplorer") then
+					module:CreateTab(v)
+				end
+			end
+			module:UpdateScroll()
+		end
+		
+		for _, v in pairs(game.ReplicatedStorage:GetDescendants()) do
+			if v:IsA("Decal") or v:IsA("Texture") or v:IsA("SpecialMesh") or v:IsA("Beam") or v:IsA("ImageLabel") or v:IsA("TextButton") then
+				if not v:FindFirstChild("_ImageForExplorer") then
+					module:CreateTab(v)
+				end
+			end
+			module:UpdateScroll()
+		end
+	end,
+	
+	["SetFuncions"] = function(module)
+		
+		main.DragBarArrow.MouseButton1Click:Connect(function()
+			if main.DragBarArrowDebounce then
+				return
+			end
+			main.DragBarArrowDebounce = true
+			if main.DragBarArrowActive == false then
+				main.DragBarArrowActive = true
+				local a = game:GetService("TweenService"):Create(main.DragBarArrow, TweenInfo.new(0.3), {Rotation = 90})
+				a:Play()
+				main.Page:TweenSize(UDim2.new(1, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.4, false)
+				--wait(0.4)
+				main.Page.Visible = true
+			elseif main.DragBarArrowActive == true then
+				main.DragBarArrowActive = false
+				local a = game:GetService("TweenService"):Create(main.DragBarArrow, TweenInfo.new(0.3), {Rotation = 0})
+				a:Play()
+				main.Page:TweenSize(UDim2.new(1, 0, 0.11, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.4, false)
+				wait(0.4)
+				main.Page.Visible = false
+			end
+			wait(0.5)
+			main.DragBarArrowDebounce = false
+		end)
+
+		workspace.DescendantAdded:Connect(function(d)
+			if main.LocalPlayer == nil then
+				return
+			end
+			if d:IsA("Decal") or d:IsA("Texture") or d:IsA("SpecialMesh") or d:IsA("Beam") or d:IsA("ImageLabel") then
+				module:CreateTab(d)
+			end
+			module:UpdateScroll()
+		end)
+
+		workspace.DescendantRemoving:Connect(function(d)
+			if main.LocalPlayer == nil then
+				return
+			end
+			if d:IsA("Decal") or d:IsA("Texture") or d:IsA("SpecialMesh") or d:IsA("Beam") or d:IsA("ImageLabel") then
+				module:RemoveTab(d)
+			end
+			module:UpdateScroll()
+		end)
+
+		main.LocalPlayer.PlayerGui.DescendantAdded:Connect(function(d)
+			if main.LocalPlayer == nil then
+				return
+			end
+			if d:IsA("ImageLabel") or d:IsA("ImageButton") then
+				if not d:FindFirstChild("_ImageForExplorer") then
+					module:CreateTab(d)
+				end
+			end
+			module:UpdateScroll()
+		end)
+
+		main.LocalPlayer.PlayerGui.DescendantRemoving:Connect(function(d)
+			if main.LocalPlayer == nil then
+				return
+			end
+			if d:IsA("ImageLabel") or d:IsA("ImageButton") then
+				if not d:FindFirstChild("_ImageForExplorer") then
+					module:RemoveTab(d)
+				end
+			end
+			module:UpdateScroll()
+		end)
+		
+		game.ReplicatedStorage.DescendantAdded:Connect(function(d)
+			if main.LocalPlayer == nil then
+				return
+			end
+			if d:IsA("Decal") or d:IsA("Texture") or d:IsA("SpecialMesh") or d:IsA("Beam") or d:IsA("ImageLabel") or d:IsA("TextButton") then
+				if not d:FindFirstChild("_ImageForExplorer") then
+					module:CreateTab(d)
+				end
+			end
+			module:UpdateScroll()
+		end)
+
+		game.ReplicatedStorage.DescendantRemoving:Connect(function(d)
+			if main.LocalPlayer == nil then
+				return
+			end
+			if d:IsA("Decal") or d:IsA("Texture") or d:IsA("SpecialMesh") or d:IsA("Beam") or d:IsA("ImageLabel") or d:IsA("TextButton") then
+				if not d:FindFirstChild("_ImageForExplorer") then
+					module:RemoveTab(d)
+				end
+			end
+			module:UpdateScroll()
+		end)
+		
+	end
+}
+
+imagesExplorer:Initialize()
+
+return imagesExplorer
