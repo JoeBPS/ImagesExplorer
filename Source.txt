@@ -39,7 +39,7 @@ local imagesExplorer = {
 	["Check"] = function(module)
 		if main.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("IMAGES_EXPLORER_GUI") then
 			module:SendNotification("You Have IE")
-			return
+			return module
 		end
 	end,
 
