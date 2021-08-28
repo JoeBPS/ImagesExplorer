@@ -33,14 +33,18 @@ local imagesExplorer = {
 
 	["Initialize"] = function(module)
 		module:Check()
+		
+		if main.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("IMAGES_EXPLORER_GUI") then module:SendNotification("You Have IE") return end
+		
 		module:LoadGui()
 	end,
 
 	["Check"] = function(module)
-		if main.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("IMAGES_EXPLORER_GUI") then
-			module:SendNotification("You Have IE")
-			return module
-		end
+		--if main.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("IMAGES_EXPLORER_GUI") then
+		--	module:SendNotification("You Have IE")
+		--	return
+		--end
+		return
 	end,
 
 	["LoadGui"] = function(module)
