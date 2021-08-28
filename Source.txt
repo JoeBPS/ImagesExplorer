@@ -1,11 +1,11 @@
 --[[
-░░░████████░░░████████░░░██░░░░░░░░░░██░░░██░░░░░░░░░░██░░░
-░░░░░░██░░░░░░██░░░░░░░░░████░░░░░░████░░░████░░░░░░████░░░
-░░░░░░██░░░░░░██░░░░░░░░░██░░██░░██░░██░░░██░░██░░██░░██░░░
-░░░░░░██░░░░░░████████░░░██░░██░░██░░██░░░██░░██░░██░░██░░░
-░░░░░░██░░░░░░██░░░░░░░░░██░░░░██░░░░██░░░██░░░░██░░░░██░░░
-░░░░░░██░░░░░░██░░░░░░░░░██░░░░░░░░░░██░░░██░░░░░░░░░░██░░░
-░░░████████░░░████████░░░██░░░░░░░░░░██░░░██░░░░░░░░░░██░░░
+░░░████████░░░████████░░░
+░░░░░░██░░░░░░██░░░░░░░░░
+░░░░░░██░░░░░░██░░░░░░░░░
+░░░░░░██░░░░░░████████░░░
+░░░░░░██░░░░░░██░░░░░░░░░
+░░░░░░██░░░░░░██░░░░░░░░░
+░░░████████░░░████████░░░
 --]]
 
 local UserInputService = game:GetService("UserInputService")
@@ -30,26 +30,26 @@ local main = {
 }
 
 local imagesExplorer = {
-	
+
 	["Initialize"] = function(module)
 		module:Check()
 		module:LoadGui()
 	end,
-	
+
 	["Check"] = function(module)
 		if main.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("IMAGES_EXPLORER_GUI") then
 			module:SendNotification("You Have IE")
 			return
 		end
 	end,
-	
+
 	["LoadGui"] = function(module)
 		module:CreateGui()
 		module:SetDrag()
 		module:GetAssets()
 		module:SetFuncions()
 	end,
-	
+
 	["SendNotification"] = function(module, text)
 		game.StarterGui:SetCore("SendNotification",{
 			Title = "IE GUI";
@@ -57,7 +57,7 @@ local imagesExplorer = {
 			Duration = 5}
 		);
 	end,
-	
+
 	["CreateGui"] = function(module)
 		wait(1)
 		main.ScreenGui.Parent = main.LocalPlayer:WaitForChild("PlayerGui")
@@ -280,11 +280,11 @@ local imagesExplorer = {
 			main.TemplateProperties.UnderSpace.ZIndex = -1
 			main.TemplateProperties.UnderSpace.RootLocalizationTable = nil
 		end
-		
+
 		module:SendNotification("GUI Successfully Loaded! Enjoy!")
-		
+
 	end,
-	
+
 	["UpdateScroll"] = function(module)
 		for _, v in pairs(main.Scroll:GetChildren()) do
 			if v.Name == "Tab" then
@@ -292,7 +292,7 @@ local imagesExplorer = {
 			end
 		end
 	end,
-	
+
 	["CreateTab"] = function(module, child)
 		for _, v in pairs(main.Scroll:GetChildren()) do
 			if v:IsA("Frame") and v.Name == "Tab" then
@@ -328,12 +328,16 @@ local imagesExplorer = {
 			end
 		end
 	end,
-	
+
 	["RemoveTab"] = function(module, child)
 		for _, tab in pairs(main.Scroll:GetChildren()) do
 			if tab:IsA("Frame") and tab:FindFirstChild("Image") then
 				if child:IsA("SpecialMesh") then
 					if tab:FindFirstChild("Image").Image == child.TextureId then
+						tab:Destroy()
+					end
+				elseif child:IsA("ImageLabel") or child:IsA("ImageButton") then
+					if tab:FindFirstChild("Image").Image == child.Image then
 						tab:Destroy()
 					end
 				else
@@ -344,7 +348,7 @@ local imagesExplorer = {
 			end
 		end
 	end,
-	
+
 	["SetDrag"] = function(module)
 		local dragging = nil
 		local dragInput = nil
@@ -381,7 +385,7 @@ local imagesExplorer = {
 			end)
 		end)
 	end,
-	
+
 	["GetAssets"] = function(module)
 		for _, v in pairs(game.Workspace:GetDescendants()) do
 			if v:IsA("Decal") or v:IsA("Texture") or v:IsA("Beam") or v:IsA("ImageLabel") then
@@ -398,7 +402,7 @@ local imagesExplorer = {
 			end
 			module:UpdateScroll()
 		end
-		
+
 		for _, v in pairs(game.ReplicatedStorage:GetDescendants()) do
 			if v:IsA("Decal") or v:IsA("Texture") or v:IsA("SpecialMesh") or v:IsA("Beam") or v:IsA("ImageLabel") or v:IsA("ImageButton") then
 				if not v:FindFirstChild("_ImageForExplorer") then
@@ -408,9 +412,9 @@ local imagesExplorer = {
 			module:UpdateScroll()
 		end
 	end,
-	
+
 	["SetFuncions"] = function(module)
-		
+
 		main.DragBarArrow.MouseButton1Click:Connect(function()
 			if main.DragBarArrowDebounce then
 				return
@@ -478,7 +482,7 @@ local imagesExplorer = {
 			end
 			module:UpdateScroll()
 		end)
-		
+
 		game.ReplicatedStorage.DescendantAdded:Connect(function(d)
 			if main.LocalPlayer == nil then
 				return
@@ -502,11 +506,10 @@ local imagesExplorer = {
 			end
 			module:UpdateScroll()
 		end)
-		
+
 	end
 }
 
-print("Initializing")
 imagesExplorer:Initialize()
 
 return imagesExplorer
