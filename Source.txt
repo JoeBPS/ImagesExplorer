@@ -506,6 +506,7 @@ local imagesExplorer = {
 	end
 }
 
+print("Initializing")
 imagesExplorer:Initialize()
 
 return imagesExplorer
