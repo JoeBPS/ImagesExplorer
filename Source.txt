@@ -400,7 +400,7 @@ local imagesExplorer = {
 		end
 		
 		for _, v in pairs(game.ReplicatedStorage:GetDescendants()) do
-			if v:IsA("Decal") or v:IsA("Texture") or v:IsA("SpecialMesh") or v:IsA("Beam") or v:IsA("ImageLabel") or v:IsA("TextButton") then
+			if v:IsA("Decal") or v:IsA("Texture") or v:IsA("SpecialMesh") or v:IsA("Beam") or v:IsA("ImageLabel") or v:IsA("ImageButton") then
 				if not v:FindFirstChild("_ImageForExplorer") then
 					module:CreateTab(v)
 				end
